@@ -5,7 +5,8 @@ import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { InputFormComponent } from './routing-component/input-form/input-form.component';
 import { AuthenticationComponent } from './authentication.component';
 import { ChangePasswordComponent } from './routing-component/change-password/change-password.component';
-import { RegitrationComponent } from './routing-component/regitration/regitration.component';
+import { InputModuleComponent } from './components/input-module/input-module.component';
+import { RegistrationComponent } from './routing-component/registration/registration.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { RegitrationComponent } from './routing-component/regitration/regitratio
     InputFormComponent,
     AuthenticationComponent,
     ChangePasswordComponent,
-    RegitrationComponent
+    InputModuleComponent,
+    RegistrationComponent
   ],
   imports: [
     CommonModule,

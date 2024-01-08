@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {AuthenticationComponent} from "./authentication.component";
 import {InputFormComponent} from "./routing-component/input-form/input-form.component";
 import {ChangePasswordComponent} from "./routing-component/change-password/change-password.component";
-import {RegitrationComponent} from "./routing-component/regitration/regitration.component";
+import {RegistrationComponent} from "./routing-component/registration/registration.component";
 
 const routes: Routes = [
   {
@@ -13,7 +13,7 @@ const routes: Routes = [
       {path:"input-form", component:InputFormComponent},
       {path:"", redirectTo:"input-form", pathMatch:"full"},
       {path:"change-password", component:ChangePasswordComponent},
-      {path:"registration", component:RegitrationComponent}
+      {path:"registration", component:RegistrationComponent}
     ]
   }
 ];
