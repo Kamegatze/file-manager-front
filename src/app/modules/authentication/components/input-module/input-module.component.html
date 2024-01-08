@@ -1,1 +1,18 @@
-<p>input-module works!</p>
+<div class="h-100 d-flex justify-content-center align-items-center">
+  <div class="container">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-6" [formGroup]="formGroup">
+        <p *ngIf="isViewMessageError()"
+           class="text-danger">
+          {{messageError}}
+        </p>
+        <label class="mb-2 form-label">{{label}}</label>
+        <input class="mb-2 form-control" [type]="type"
+               [formControlName]="controlName"
+               [placeholder]="placeholder"/>
+      </div>
+      <div class="col"></div>
+    </div>
+  </div>
+</div>

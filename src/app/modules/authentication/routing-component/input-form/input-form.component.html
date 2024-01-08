@@ -1,4 +1,34 @@
-<div class="h-100 d-flex justify-content-center align-items-center flex-column">
-  <p>input-form works!</p>
-</div>
-
+<form [formGroup]="formLogin" class="h-100 d-flex justify-content-center flex-column">
+  <div class="text-center mb-5">Sign in</div>
+  <app-input-module class="mb-3"
+  [formGroup]="formLogin"
+  [controlName]="controlsName[0]"
+  label="Login"
+  placeholder="Enter login"
+  type="text"
+  messageError="Make sure that you have entered your
+  login and it is greater than or equal to 5 characters"
+  />
+  <app-input-module class="mb-3"
+  [formGroup]="formLogin"
+  [controlName]="controlsName[1]"
+  label="Password"
+  placeholder="Enter password"
+  type="password"
+  messageError="Make sure that you have entered your password and
+  it is greater then or equal to 8 character"
+  />
+  <div class="d-flex justify-content-center">
+    <div class="container">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+          <button [disabled]="formLogin.invalid" class="btn btn-primary me-2">sign in</button>
+          <a class="me-2" routerLink="../change-password">Change password</a>
+          <a routerLink="../registration">Registration</a>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+  </div>
+</form>
