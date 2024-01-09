@@ -1,4 +1,17 @@
-<form [formGroup]="formLogin" class="h-100 d-flex justify-content-center flex-column">
+<form (ngSubmit)="submit()" [formGroup]="formLogin" class="h-100 d-flex justify-content-center flex-column">
+  <div class="d-flex justify-content-center">
+    <div class="container">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+          <div *ngIf="messageError" class="text-danger">
+            {{messageError}}
+          </div>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+  </div>
   <div class="text-center mb-5">Sign in</div>
   <app-input-module class="mb-3"
   [formGroup]="formLogin"
@@ -23,7 +36,11 @@
       <div class="row">
         <div class="col"></div>
         <div class="col-6">
-          <button [disabled]="formLogin.invalid" class="btn btn-primary me-2">sign in</button>
+          <button type="submit"
+                  [disabled]="formLogin.invalid"
+                  class="btn btn-primary me-2">
+            sign in
+          </button>
           <a class="me-2" routerLink="../change-password">Change password</a>
           <a routerLink="../registration">Registration</a>
         </div>

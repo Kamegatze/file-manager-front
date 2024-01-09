@@ -8,6 +8,8 @@ import { ChangePasswordComponent } from './routing-component/change-password/cha
 import { InputModuleComponent } from './components/input-module/input-module.component';
 import { RegistrationComponent } from './routing-component/registration/registration.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {AuthenticationInterceptor} from "@root/interceptor/authentication.interceptor";
 
 
 @NgModule({
