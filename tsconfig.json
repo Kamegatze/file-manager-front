@@ -27,7 +27,8 @@
     "paths": {
       "@root/*" : ["./*"],
       "@authentication/*" : ["./modules/authentication/*"],
-      "@utilities/*" : ["./utilities/*"]
+      "@utilities/*" : ["./utilities/*"],
+      "@file-manager/*": ["./modules/file-manager/*"]
     }
   },
   "angularCompilerOptions": {
