@@ -4,8 +4,12 @@ import {Injectable} from "@angular/core";
   providedIn: 'root'
 })
 export class LocalStorageImp implements LocalStorage{
-  getValueLocalStorage<T>(key: string): T {
-    return JSON.parse(<any>localStorage.getItem(key));
+  getValueLocalStorage<T>(key: string): T | null {
+    const item = localStorage.getItem(key);
+    if (item === null) {
+      return null;
+    }
+    return JSON.parse(item);
   }
 
   setValueLocalStorage(key: string, object: object): void {
