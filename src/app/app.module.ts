@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthenticationInterceptor} from "@root/interceptor/authentication.interceptor";
+import {InputModuleComponent} from "@root/components/input-module/input-module.component";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    InputModuleComponent
   ],
   imports: [
     BrowserModule,
