@@ -62,7 +62,13 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         if (err.status === 401 && err instanceof HttpErrorResponse) {
           console.error("Error authorization");
           return this.updateAccessToken(`${this.authentication.getAuthenticationUrl()}/authentication`,
-            {headers: {AuthorizationRefresh: jwtObject.refreshToken}}, next, authRequest, req, authenticationHeader);
+            {headers: {AuthorizationRefresh: jwtObject.refreshToken}}, next, authRequest, req, authenticationHeader)
+            .pipe(
+              catchError((err) => {
+                this.router.navigate(["authentication"]).then();
+                throw `Error request by url ${this.authentication.getAuthenticationUrl()}/authentication. Details: ${err.message}`;
+              })
+            );
         }
         throw `Error request by url: ${authRequest.url}. Details: ${err.message}`;
       })
