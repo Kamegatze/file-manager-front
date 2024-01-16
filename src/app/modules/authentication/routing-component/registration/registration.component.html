@@ -1,3 +1,64 @@
-<div class="h-100 d-flex justify-content-center align-items-center flex-column">
-  <p>registration works!</p>
-</div>
+<form (ngSubmit)="submit()" [formGroup]="formRegistration" class="h-100 d-flex justify-content-center flex-column">
+  <div class="d-fluex justify-content-center">
+    <div class="container">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+          <div *ngIf="messageError" class="text-danger">
+            {{messageError}}
+          </div>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center mb-5">Sign up</div>
+  <app-input-module
+  class="mb-3"
+  [formGroup]="formRegistration"
+  [controlName]="controlsName[0]"
+  label="Login"
+  placeholder="Input your login"
+  type="text"
+  messageError="Your login is invalid"/>
+  <app-input-module
+  class="mb-3"
+  [formGroup]="formRegistration"
+  [controlName]="controlsName[1]"
+  label="Email"
+  placeholder="Input your email"
+  type="email"
+  messageError="Your email has error"/>
+  <app-input-module
+  class="mb-3"
+  [formGroup]="formRegistration"
+  [controlName]="controlsName[2]"
+  label="Password"
+  placeholder="Input your password"
+  type="password"
+  messageError="Your password is invalid"/>
+  <app-input-module
+  class="mb-3"
+  [formGroup]="formRegistration"
+  [controlName]="controlsName[3]"
+  label="Retry password"
+  placeholder="Input your password retry"
+  type="password"
+  messageError="Your password doesn't match"
+  [isViewMessageError]="isViewRetryPassword"/>
+  <div class="d-flex justify-content-center">
+    <div class="container">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+          <button type="submit"
+                  [disabled]="formRegistration.invalid"
+                  class="btn btn-primary me-2">
+            sign up
+          </button>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+  </div>
+</form>

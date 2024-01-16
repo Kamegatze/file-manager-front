@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormGroup} from "@angular/forms";
 
 @Component({
@@ -13,12 +13,11 @@ export class InputModuleComponent implements OnInit{
   @Input() type!: string;
   @Input() formGroup!: FormGroup;
   @Input() messageError!: string;
-  @Input() isViewMessageError!: Function
+  @Input() isViewMessageError: Function = () => {
+    return this.formGroup.get(this.controlName)?.touched &&
+    this.formGroup.get(this.controlName)?.invalid;
+  };
 
   ngOnInit(): void {
-     this.isViewMessageError = () => {
-      return this.formGroup.get(this.controlName)?.touched &&
-        this.formGroup.get(this.controlName)?.invalid;
-    };
   }
 }
