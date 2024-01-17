@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "@authentication/services/authentication/authentication.service";
 import {Login} from "@authentication/models/login";
 import {LocalStorageImp} from "@utilities/local-storage/imp/local-storage-imp";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-input-form',
@@ -15,7 +16,9 @@ export class InputFormComponent implements OnInit{
   messageError!: string;
   constructor(private formBuilder: FormBuilder,
               private authentication: AuthenticationService,
-              private localStorage: LocalStorageImp) {}
+              private localStorage: LocalStorageImp,
+              private router: Router
+              ) {}
 
   ngOnInit(): void {
     this.formLogin = this.formBuilder.group({
@@ -30,6 +33,7 @@ export class InputFormComponent implements OnInit{
     this.authentication.signin(login).subscribe({
       next: objectToken => {
         this.localStorage.setValueLocalStorage(this.authentication.getKeyJwtObject(), objectToken);
+        this.router.navigate(["/"]).then();
       },
       error: err => {
         console.error(err);

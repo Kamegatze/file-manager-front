@@ -17,6 +17,22 @@
   class="mb-3"
   [formGroup]="formRegistration"
   [controlName]="controlsName[0]"
+  label="First Name"
+  placeholder="Input your First Name"
+  type="text"
+  messageError="Your First Name is invalid"/>
+  <app-input-module
+  class="mb-3"
+  [formGroup]="formRegistration"
+  [controlName]="controlsName[1]"
+  label="Last Name"
+  placeholder="Input your Last Name"
+  type="text"
+  messageError="Your Last Name is invalid"/>
+  <app-input-module
+  class="mb-3"
+  [formGroup]="formRegistration"
+  [controlName]="controlsName[2]"
   label="Login"
   placeholder="Input your login"
   type="text"
@@ -24,7 +40,7 @@
   <app-input-module
   class="mb-3"
   [formGroup]="formRegistration"
-  [controlName]="controlsName[1]"
+  [controlName]="controlsName[3]"
   label="Email"
   placeholder="Input your email"
   type="email"
@@ -32,7 +48,7 @@
   <app-input-module
   class="mb-3"
   [formGroup]="formRegistration"
-  [controlName]="controlsName[2]"
+  [controlName]="controlsName[4]"
   label="Password"
   placeholder="Input your password"
   type="password"
@@ -40,7 +56,7 @@
   <app-input-module
   class="mb-3"
   [formGroup]="formRegistration"
-  [controlName]="controlsName[3]"
+  [controlName]="controlsName[5]"
   label="Retry password"
   placeholder="Input your password retry"
   type="password"
@@ -52,7 +68,8 @@
         <div class="col"></div>
         <div class="col-6">
           <button type="submit"
-                  [disabled]="formRegistration.invalid"
+                  [disabled]="formRegistration.invalid ||
+                  this.formRegistration.get('password')?.value !== this.formRegistration.get('retryPassword')?.value"
                   class="btn btn-primary me-2">
             sign up
           </button>
