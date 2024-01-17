@@ -41,7 +41,8 @@ export class RegistrationComponent implements OnInit{
     this.controlsName = Object.keys(this.formRegistration.controls)
     console.log(this.formRegistration.get('password')?.value);
     this.isViewRetryPassword = () => {
-      return this.formRegistration.get('password')?.value !== this.formRegistration.get('retryPassword')?.value ||
+      return (this.formRegistration.get('password')?.value !== this.formRegistration.get('retryPassword')?.value
+          && this.formRegistration.get('retryPassword')?.touched) ||
         (this.formRegistration.get('retryPassword')?.touched &&
           this.formRegistration.get('retryPassword')?.invalid);
     }
