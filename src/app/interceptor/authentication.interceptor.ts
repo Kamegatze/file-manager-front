@@ -26,9 +26,10 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     this.http = new HttpClient(httpBackend);
   }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const url = window.location.href;
     const jwtObject = this.localStorage.getValueLocalStorage<JwtToken>(this.authentication.getKeyJwtObject());
     if(jwtObject === null) {
-      if(!this.router.url.includes("/authentication")) {
+      if(!url.includes("/authentication")) {
         this.router.navigate(['authentication']).then();
       }
       return next.handle(req);
@@ -44,7 +45,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     * */
     this.http.get<boolean>(`${this.authentication.getAuthenticationUrl()}/is-authentication`,
       {headers: <any>authenticationHeader}).subscribe(isAuthentication => {
-      if (!isAuthentication && !this.router.url.includes("/authentication")) {
+      if (!isAuthentication && !url.includes("/authentication")) {
         this.router.navigate(['authentication']).then();
       }
     })

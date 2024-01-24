@@ -19,16 +19,17 @@ export class AppComponent implements OnInit, OnDestroy {
               private http: HttpClient) {}
 
   ngOnInit(): void {
+    const url: string = window.location.href;
     const authentication = this.localStorage
       .getValueLocalStorage<JwtToken>(this.authentication.getKeyJwtObject());
-    if (authentication === null && !this.router.url.includes("/authentication")) {
+    if (authentication === null && !url.includes("/authentication")) {
       this.router.navigate(["authentication"]).then();
       return;
     }
     this.isAuthenticationSubscription$ = this.http
       .get<boolean>(`${this.authentication.getAuthenticationUrl()}/is-authentication`)
       .subscribe(isAuthentication => {
-        if (!isAuthentication && !this.router.url.includes("/authentication")) {
+        if (!isAuthentication && !url.includes("/authentication")) {
           this.router.navigate(["authentication"]).then();
         }
       });
