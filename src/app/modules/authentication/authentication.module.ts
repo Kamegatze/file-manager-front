@@ -8,6 +8,7 @@ import { ChangePasswordComponent } from './routing-component/change-password/cha
 import { RegistrationComponent } from './routing-component/registration/registration.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {InputModuleComponent} from "@root/components/input-module/input-module.component";
+import {PageRequestChangePasswordComponent} from "./routing-component/page-request-change-password/page-request-change-password.component";
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import {InputModuleComponent} from "@root/components/input-module/input-module.c
     AuthenticationComponent,
     ChangePasswordComponent,
     RegistrationComponent,
-    InputModuleComponent
+    InputModuleComponent,
+    PageRequestChangePasswordComponent
   ],
   imports: [
     CommonModule,
