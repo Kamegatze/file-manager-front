@@ -5,7 +5,7 @@ import {AuthenticationService} from "@authentication/services/authentication/aut
 import {HttpClient} from "@angular/common/http";
 import {JwtToken} from "@authentication/models/jwt-token";
 import {tap} from "rxjs";
-import {AuthenticationHeader} from "@authentication/models/AuthenticationHeader";
+import {AuthenticationHeader} from "@root/models/AuthenticationHeader";
 
 
 export const authenticationGuard: CanActivateFn = (route, state) => {

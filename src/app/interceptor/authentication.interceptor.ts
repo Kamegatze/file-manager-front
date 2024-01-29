@@ -4,8 +4,7 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest,
-  HttpResponse
+  HttpRequest
 } from '@angular/common/http';
 import {catchError, Observable, switchMap} from "rxjs";
 import {Injectable} from "@angular/core";
@@ -13,7 +12,7 @@ import {AuthenticationService} from "@authentication/services/authentication/aut
 import {LocalStorageImp} from "@utilities/local-storage/imp/local-storage-imp";
 import {Router} from "@angular/router";
 import {JwtToken} from "@authentication/models/jwt-token";
-import {AuthenticationHeader} from "@authentication/models/AuthenticationHeader";
+import {AuthenticationHeader} from "@root/models/AuthenticationHeader";
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
