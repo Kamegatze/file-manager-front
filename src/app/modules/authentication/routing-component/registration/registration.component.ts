@@ -68,17 +68,19 @@ export class RegistrationComponent implements OnInit{
 
   submit() {
     const signUp: SignUp = this.formRegistration.value;
-    this.authenticationService.signup(signUp).subscribe(response => {
-      if (response.returnCode >= 200 && response.returnCode <= 300) {
-        this.authenticationService.signin(<Login>{login: signUp.login, password: signUp.password}).subscribe({
-          next: jwtToken => {
-            this.localStorageImp.setValueLocalStorage(this.authenticationService.getKeyJwtObject(), jwtToken);
-            this.router.navigate(["/"]).then();
-          },
-          error: err => {
-
-          }
-        });
+    this.authenticationService.signup(signUp).subscribe({
+      next: response => {
+        if (response.returnCode >= 200 && response.returnCode <= 300) {
+          this.authenticationService.signin(<Login>{login: signUp.login, password: signUp.password}).subscribe({
+            next: jwtToken => {
+              this.localStorageImp.setValueLocalStorage(this.authenticationService.getKeyJwtObject(), jwtToken);
+              this.router.navigate(["/"]).then();
+            }
+          });
+        }
+      },
+      error: err => {
+        this.messageError = err
       }
     });
   }

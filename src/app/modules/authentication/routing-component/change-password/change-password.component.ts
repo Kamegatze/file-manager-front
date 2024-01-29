@@ -51,7 +51,7 @@ export class ChangePasswordComponent implements OnInit{
       recoveryCode: this.token
     };
     this.authentication.changePassword(changePassword).subscribe({
-      next: response => {
+      complete: () => {
         this.router.navigate(["authentication"]).then();
       },
       error: err => {

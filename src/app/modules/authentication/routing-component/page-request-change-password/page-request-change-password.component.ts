@@ -1,7 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "@authentication/services/authentication/authentication.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ModalComponent} from "@root/components/modal/modal.component";
 import {response} from "express";
+import {ResponseEntity} from "@root/models/response-entity";
 
 @Component({
   selector: "app-page-request-change-password",
@@ -12,9 +15,11 @@ export class PageRequestChangePasswordComponent implements OnInit {
   formRequest!: FormGroup;
   controlsName!: string[];
   errorMessage!: string;
+  isOpen: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
-    private authentication: AuthenticationService
+    private authentication: AuthenticationService,
+    private modal: NgbModal
   ) {}
   ngOnInit(): void {
     this.formRequest = this.formBuilder.group({
@@ -31,6 +36,10 @@ export class PageRequestChangePasswordComponent implements OnInit {
     this.authentication.sendLinkOnEmailForChangePassword(loginOrEmail).subscribe({
       error: err => {
         this.errorMessage = err;
+      },
+      next: (response: ResponseEntity) => {
+        const modalRef = this.modal.open(ModalComponent);
+        modalRef.componentInstance.message = response.message;
       }
     });
   }
