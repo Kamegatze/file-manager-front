@@ -6,6 +6,7 @@ import {JwtToken} from "@authentication/models/jwt-token";
 import {Observable} from "rxjs";
 import {SignUp} from "@authentication/models/sign-up";
 import {ResponseEntity} from "@root/models/response-entity";
+import {ChangePassword} from "@authentication/models/change-password";
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,16 @@ export class AuthenticationService {
   }
   public signup(signUp: SignUp): Observable<ResponseEntity> {
     return this.http.post<ResponseEntity>(`${this.authenticationUrl}/signup`, signUp);
+  }
+
+  public sendLinkOnEmailForChangePassword(loginOrEmail: string): Observable<any> {
+    const queryParam = {loginOrEmail};
+    return this.http.post<ResponseEntity>(`${this.authenticationUrl}/send-email-change-password`,
+      {},
+      {params: queryParam});
+  }
+
+  public changePassword(changePassword: ChangePassword): Observable<ResponseEntity> {
+    return this.http.post<ResponseEntity>(`${this.authenticationUrl}/change-password`, changePassword);
   }
 }

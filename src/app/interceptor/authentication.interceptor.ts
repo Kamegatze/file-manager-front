@@ -51,7 +51,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     })
 
     const isInsertHeader = authenticationHeader.AuthorizationRefresh !== undefined
-      && authenticationHeader.Authorization !== undefined && !this.router.url.includes("/authentication");
+      && authenticationHeader.Authorization !== undefined && !url.includes("/authentication");
 
     const authRequest = req.clone({
       setHeaders: isInsertHeader ? <any>authenticationHeader : {}
@@ -60,7 +60,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     return next.handle(authRequest).pipe(
       catchError((err) => {
-        if (err.status === 401 && err instanceof HttpErrorResponse) {
+        if (err.status === 401 && err instanceof HttpErrorResponse && !url.includes("/authentication")) {
           console.error("Error authorization");
           return this.updateAccessToken(`${this.authentication.getAuthenticationUrl()}/authentication`,
             {headers: {AuthorizationRefresh: jwtObject.refreshToken}}, next, authRequest, req, authenticationHeader)
