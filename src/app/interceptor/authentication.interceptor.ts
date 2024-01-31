@@ -9,23 +9,25 @@ import {
 import {catchError, Observable, switchMap} from "rxjs";
 import {Injectable} from "@angular/core";
 import {AuthenticationService} from "@authentication/services/authentication/authentication.service";
-import {LocalStorageImp} from "@utilities/local-storage/imp/local-storage-imp";
 import {Router} from "@angular/router";
 import {JwtToken} from "@authentication/models/jwt-token";
 import {AuthenticationHeader} from "@root/models/AuthenticationHeader";
+import {Location} from "@angular/common";
+import {LocalStorage} from "@utilities/local-storage/local-storage";
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
 
   private http!: HttpClient;
   constructor(private authentication: AuthenticationService,
-              private localStorage: LocalStorageImp,
+              private localStorage: LocalStorage,
               private router: Router,
-              httpBackend: HttpBackend) {
+              httpBackend: HttpBackend,
+              private location: Location) {
     this.http = new HttpClient(httpBackend);
   }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const url = window.location.href;
+    const url = this.location.path();
     const jwtObject = this.localStorage.getValueLocalStorage<JwtToken>(this.authentication.getKeyJwtObject());
     if(jwtObject === null) {
       if(!url.includes("/authentication")) {

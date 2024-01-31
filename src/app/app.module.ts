@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthenticationInterceptor} from "@root/interceptor/authentication.interceptor";
+import {LocalStorage} from "@utilities/local-storage/local-storage";
+import {LocalStorageImp} from "@utilities/local-storage/imp/local-storage-imp";
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import {AuthenticationInterceptor} from "@root/interceptor/authentication.interc
   ],
   providers: [
     provideClientHydration(),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor , multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor , multi: true },
+    { provide: LocalStorage, useClass: LocalStorageImp}
   ],
   bootstrap: [AppComponent]
 })

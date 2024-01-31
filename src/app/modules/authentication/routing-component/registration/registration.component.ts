@@ -2,10 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SignUp} from "@authentication/models/sign-up";
 import {AuthenticationService} from "@authentication/services/authentication/authentication.service";
-import {ResponseEntity} from "@root/models/response-entity";
 import {Login} from "@authentication/models/login";
-import {LocalStorageImp} from "@utilities/local-storage/imp/local-storage-imp";
 import {Router} from "@angular/router";
+import {LocalStorage} from "@utilities/local-storage/local-storage";
 
 @Component({
   selector: 'app-registration',
@@ -21,7 +20,7 @@ export class RegistrationComponent implements OnInit{
   constructor(
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
-    private localStorageImp: LocalStorageImp,
+    private localStorageImp: LocalStorage,
     private router: Router
     ) {
   }

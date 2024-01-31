@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "@authentication/services/authentication/authentication.service";
 import {Login} from "@authentication/models/login";
-import {LocalStorageImp} from "@utilities/local-storage/imp/local-storage-imp";
 import {Router} from "@angular/router";
+import {LocalStorage} from "@utilities/local-storage/local-storage";
 
 @Component({
   selector: 'app-input-form',
@@ -16,7 +16,7 @@ export class InputFormComponent implements OnInit{
   messageError!: string;
   constructor(private formBuilder: FormBuilder,
               private authentication: AuthenticationService,
-              private localStorage: LocalStorageImp,
+              private localStorage: LocalStorage,
               private router: Router
               ) {}
 
