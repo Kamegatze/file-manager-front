@@ -1,5 +1,5 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from "@angular/router";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
 import {AuthenticationService} from "@authentication/services/authentication/authentication.service";
 import {HttpClient} from "@angular/common/http";
 import {Subscription} from "rxjs";

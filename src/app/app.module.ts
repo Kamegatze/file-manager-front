@@ -8,6 +8,8 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthenticationInterceptor} from "@root/interceptor/authentication.interceptor";
 import {LocalStorage} from "@utilities/local-storage/local-storage";
 import {LocalStorageImp} from "@utilities/local-storage/imp/local-storage-imp";
+import {DecoderJwt} from "@utilities/decoder-jwt/decoder-jwt";
+import {DecoderJwtImp} from "@utilities/decoder-jwt/imp/decoder-jwt-imp";
 
 @NgModule({
   declarations: [
@@ -22,7 +24,8 @@ import {LocalStorageImp} from "@utilities/local-storage/imp/local-storage-imp";
   providers: [
     provideClientHydration(),
     { provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor , multi: true },
-    { provide: LocalStorage, useClass: LocalStorageImp}
+    { provide: LocalStorage, useClass: LocalStorageImp},
+    { provide: DecoderJwt, useClass: DecoderJwtImp}
   ],
   bootstrap: [AppComponent]
 })
