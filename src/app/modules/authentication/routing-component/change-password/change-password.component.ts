@@ -4,6 +4,7 @@ import {AuthenticationService} from "@authentication/services/authentication/aut
 import {ChangePassword} from "@authentication/models/change-password";
 import {ActivatedRoute, Router} from "@angular/router";
 import {response} from "express";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-change-password',
@@ -52,10 +53,11 @@ export class ChangePasswordComponent implements OnInit{
     };
     this.authentication.changePassword(changePassword).subscribe({
       complete: () => {
+        this.messageError = undefined!;
         this.router.navigate(["authentication"]).then();
       },
-      error: err => {
-        this.messageError = err;
+      error: (err: HttpErrorResponse)=> {
+        this.messageError = err.error.message;
       }
     });
   }

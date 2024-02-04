@@ -5,6 +5,8 @@ import {AuthenticationService} from "@authentication/services/authentication/aut
 import {Login} from "@authentication/models/login";
 import {Router} from "@angular/router";
 import {LocalStorage} from "@utilities/local-storage/local-storage";
+import {HttpErrorResponse, HttpEvent, HttpResponse} from "@angular/common/http";
+import {ResponseEntity} from "@root/models/response-entity";
 
 @Component({
   selector: 'app-registration',
@@ -69,6 +71,7 @@ export class RegistrationComponent implements OnInit{
     const signUp: SignUp = this.formRegistration.value;
     this.authenticationService.signup(signUp).subscribe({
       next: response => {
+        this.messageError = undefined!;
         if (response.returnCode >= 200 && response.returnCode <= 300) {
           this.authenticationService.signin(<Login>{login: signUp.login, password: signUp.password}).subscribe({
             next: jwtToken => {
@@ -78,8 +81,8 @@ export class RegistrationComponent implements OnInit{
           });
         }
       },
-      error: err => {
-        this.messageError = err
+      error: (err: HttpErrorResponse) => {
+        this.messageError = err.error.message
       }
     });
   }

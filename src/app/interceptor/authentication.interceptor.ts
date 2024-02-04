@@ -55,7 +55,11 @@ export class AuthenticationInterceptor implements HttpInterceptor {
       && authenticationHeader.Authorization !== undefined && !url.includes("/authentication");
 
     const authRequest = req.clone({
-      setHeaders: isInsertHeader ? <any>authenticationHeader : {}
+      setHeaders: isInsertHeader ? {...<any>authenticationHeader,
+        'Accept-Language': 'en-EN,en;q=0.8,en-US;q=0.5,en;q=0.3'
+      } : {
+        'Accept-Language': 'en-EN,en;q=0.8,en-US;q=0.5,en;q=0.3'
+      }
     });
 
 
@@ -72,7 +76,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
               })
             );
         }
-        throw `Error request by url: ${authRequest.url}. Details: ${err.message}`;
+        throw err;
       })
     );
   }

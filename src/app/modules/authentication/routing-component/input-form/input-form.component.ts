@@ -4,6 +4,7 @@ import {AuthenticationService} from "@authentication/services/authentication/aut
 import {Login} from "@authentication/models/login";
 import {Router} from "@angular/router";
 import {LocalStorage} from "@utilities/local-storage/local-storage";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-input-form',
@@ -32,15 +33,12 @@ export class InputFormComponent implements OnInit{
     const login: Login = this.formLogin.value;
     this.authentication.signin(login).subscribe({
       next: objectToken => {
+        this.messageError = undefined!;
         this.localStorage.setValueLocalStorage(this.authentication.getKeyJwtObject(), objectToken);
         this.router.navigate(["/"]).then();
       },
-      error: err => {
-        console.error(err);
-        this.messageError = err.message;
-      },
-      complete: () => {
-        console.log("Http request completed");
+      error: (err: HttpErrorResponse) => {
+        this.messageError = err.error.message;
       }
     });
   }

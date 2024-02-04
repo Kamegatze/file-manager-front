@@ -5,6 +5,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ModalComponent} from "@root/components/modal/modal.component";
 import {response} from "express";
 import {ResponseEntity} from "@root/models/response-entity";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: "app-page-request-change-password",
@@ -34,10 +35,11 @@ export class PageRequestChangePasswordComponent implements OnInit {
   submit() {
     const loginOrEmail: string = this.formRequest.value.loginOrEmail;
     this.authentication.sendLinkOnEmailForChangePassword(loginOrEmail).subscribe({
-      error: err => {
-        this.errorMessage = err;
+      error: (err: HttpErrorResponse) => {
+        this.errorMessage = err.error.message;
       },
       next: (response: ResponseEntity) => {
+        this.errorMessage = undefined!
         const modalRef = this.modal.open(ModalComponent);
         modalRef.componentInstance.message = response.message;
       }
