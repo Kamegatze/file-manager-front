@@ -1,5 +1,36 @@
-<div class="h-100 d-flex justify-content-center align-items-center">
-  Hello
+<div class="container-grid">
+  <div class="d-flex ms-3">
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="container-hover me-2"
+        (click)="transitionBack(deepItems[deepItems.length - 1]['parentId'])"
+      >
+        <img class="back" alt=""
+             [src]="arrowBack" fill width="20px" height="20px"/>
+      </div>
+    </div>
+    <nav class="breadcrumb-nav text-center" aria-label="breadcrumb">
+      <ol class="breadcrumb h-100 d-flex align-items-center justify-content-center">
+        <li (click)="breadcrumbClick(i, item['id'])"
+            *ngFor="let item of deepItems; index as i"
+            class="breadcrumb-item"
+            [ngClass]="deepItems.length - 1 === i ? '': 'active'">
+            <span class="breadcrumb-item-text">
+              {{item['name']}}
+            </span>
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <div class="parent">
+    <div *ngFor="let item of currentItems">
+      <div (click)="transitionToChildren(item['id'])" *ngIf="!item['isFile']">
+        <img [src]="folderUrl"/>
+        <div class="text-center">
+          {{item['name']}}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 

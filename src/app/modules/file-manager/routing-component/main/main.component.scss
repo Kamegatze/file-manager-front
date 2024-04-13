@@ -1,0 +1,36 @@
+.parent {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 205px);
+  justify-items: center;
+  align-items: center;
+}
+
+.parent img {
+  height: 175px;
+  width: 175px;
+}
+
+.container-grid {
+  padding: 50px 100px;
+}
+
+.breadcrumb-nav {
+  --bs-breadcrumb-divider: '>';
+}
+.container-hover :hover, .breadcrumb-item :hover {
+  background: #f5f5f5;
+}
+
+.back {
+  border-radius: 30%;
+}
+
+.back:active, .breadcrumb-item :active{
+  transform: scale(0.8);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}
+
+.breadcrumb-item-text {
+  border-radius: 20%;
+  cursor: pointer;
+}

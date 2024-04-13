@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 
 import { FileManagerRoutingModule } from './file-manager-routing.module';
 import { MainComponent } from './routing-component/main/main.component';
@@ -17,11 +17,12 @@ import {NgbCollapse} from "@ng-bootstrap/ng-bootstrap";
     NavBarComponent,
     FooterComponent
   ],
-  imports: [
-    CommonModule,
-    FileManagerRoutingModule,
-    ReactiveFormsModule,
-    NgbCollapse
-  ]
+    imports: [
+        CommonModule,
+        FileManagerRoutingModule,
+        ReactiveFormsModule,
+        NgbCollapse,
+        NgOptimizedImage
+    ]
 })
 export class FileManagerModule { }
