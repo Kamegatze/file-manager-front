@@ -9,8 +9,8 @@ const routes: Routes = [
     component: FileManagerComponent,
     children: [
       {
-        path: "",
-        component: MainComponent
+        path: "**",
+        component: MainComponent,
       }
     ]
   }

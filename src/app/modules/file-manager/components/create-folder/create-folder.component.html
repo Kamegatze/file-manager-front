@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h4 class="modal-title">Create folder</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <form (ngSubmit)="createFolder()" >
+    <div class="mb-3">
+      <p *ngIf="name.invalid && name.touched"
+         class="text-danger">
+        name must one sign or more
+      </p>
+      <label for="nameFolder">Input name folder</label>
+      <div class="input-group">
+        <input id="nameFolder"
+        class="form-control"
+        placeholder="Input name folder"
+        [formControl]="name">
+      </div>
+    </div>
+    <div class="mb-3">
+      <button [disabled]="name.invalid" class="btn btn-primary">Create folder</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h4 class="modal-title">Upload file</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <form (ngSubmit)="uploadFile($event)" >
+    <div class="mb-3">
+      <label for="uploadFile">Select file for upload</label>
+      <div class="input-group">
+        <input id="uploadFile"
+               class="form-control"
+                type="file">
+      </div>
+    </div>
+    <div class="mb-3">
+      <button [disabled]="false" class="btn btn-primary">Upload file</button>
+    </div>
+  </form>
+</div>

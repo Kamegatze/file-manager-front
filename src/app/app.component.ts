@@ -6,6 +6,7 @@ import {Subscription} from "rxjs";
 import {JwtToken} from "@authentication/models/jwt-token";
 import {LocalStorage} from "@utilities/local-storage/local-storage";
 import {Location} from "@angular/common";
+import {GlobalClickService} from "@file-manager/services/global-click.service";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit, OnDestroy {
               private router: Router,
               private authentication: AuthenticationService,
               private http: HttpClient,
-              private location: Location
+              private location: Location,
+              private globalClickService: GlobalClickService
               ) {}
 
   ngOnInit(): void {
@@ -36,6 +38,10 @@ export class AppComponent implements OnInit, OnDestroy {
           this.router.navigate(["authentication"]).then();
         }
       });
+  }
+
+  clickOnRoot(event: any) {
+    this.globalClickService.click();
   }
 
   ngOnDestroy(): void {

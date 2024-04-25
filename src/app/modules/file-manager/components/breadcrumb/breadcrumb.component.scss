@@ -1,0 +1,35 @@
+.container-hover :hover, .breadcrumb-element :hover{
+  background: #f5f5f5;
+}
+
+.back {
+  border-radius: 30%;
+}
+
+.back:active, .breadcrumb-element :active{
+  transform: scale(0.8);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}
+
+.breadcrumb-item-text {
+  border-radius: 20%;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+li::marker{
+  content: ' / ';
+}
+
+li {
+  margin-left: 15px;
+}
+
+ol {
+  padding-left: 0;
+}
+
+.active {
+  color: #818181;
+}

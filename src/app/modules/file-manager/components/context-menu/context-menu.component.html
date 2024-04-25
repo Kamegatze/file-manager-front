@@ -1,0 +1,14 @@
+<div [style.visibility]="visible"
+     [style.left]="x + 'px'"
+     [style.top]="y + 'px'"
+     class="main"
+     (click)="clickContext.emit(true)"
+>
+  <div class="wrapper">
+    <div class="content">
+      <ul class="menu">
+        <ng-content/>
+      </ul>
+    </div>
+  </div>
+</div>

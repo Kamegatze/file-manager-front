@@ -1,33 +1,52 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, HostListener, OnInit} from '@angular/core';
 import {FileManagerService} from "@file-manager/services/file-manager.service";
+import { NavigationEnd, Router} from "@angular/router";
+import {FileSystem} from "@file-manager/models/file-system";
+import {GlobalClickService} from "@file-manager/services/global-click.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {CreateFolderComponent} from "@file-manager/components/create-folder/create-folder.component";
+import {UploadFileComponent} from "@file-manager/components/upload-file/upload-file.component";
+
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
+  styleUrl: './main.component.scss',
 })
 export class MainComponent implements OnInit{
 
-    folderUrl!: string;
-    arrowBack!: string;
-    currentItems!: any[];
-    deepItems!: any[];
-    constructor(private fileManagerService: FileManagerService)
-    {}
-    ngOnInit(): void {
-      const base64Url = 'data:image/png;base64,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';
-      const backArrow = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yMCAuNzU1bC0xNC4zNzQgMTEuMjQ1IDE0LjM3NCAxMS4yMTktLjYxOS43ODEtMTUuMzgxLTEyIDE1LjM5MS0xMiAuNjA5Ljc1NXoiLz48L3N2Zz4=";
-      const blob = this.base64ToBlob(base64Url);
-      const blobArrow = this.base64ToBlob(backArrow);
-      this.arrowBack = URL.createObjectURL(blobArrow);
-      this.folderUrl = URL.createObjectURL(blob);
-      this.fileManagerService.getRoot().subscribe(value => {
-        this.deepItems = [value];
-        this.fileManagerService.getChildren(value['id']).subscribe(children => {
-          this.currentItems = children;
-        });
-      })
+  folderUrl!: string;
+  arrowBack!: string;
+  currentItems!: FileSystem[];
+  path!: string;
+  visibleContextMenu = 'hidden';
+  x = 0;
+  y = 0;
+  isClickContext = false;
+  constructor(
+    private fileManagerService: FileManagerService,
+    private router: Router,
+    private globalClickService: GlobalClickService,
+    private modalService: NgbModal,
+  )
+  {}
+  ngOnInit(): void {
+    const url = this.router.url.split("/").filter(item => item.length).join("/");
+    if (!url.length) {
+      this.path = "root"
+    } else {
+      this.path = `root/${url}`
     }
+    this.fileManagerService.getChildrenByPath(this.path).subscribe(children => {
+      this.currentItems = children;
+    });
+    this.globalClickService.listner$.subscribe(() => {
+      if (!this.isClickContext) {
+        this.visibleContextMenu = 'hidden';
+      }
+      this.isClickContext = false;
+    });
+  }
 
     private base64ToBlob(base64: string): Blob {
       const type = base64.split(';')[0].split(':')[1];
@@ -40,33 +59,101 @@ export class MainComponent implements OnInit{
       return new Blob([arrayBuffer], {type});
     }
 
-  transitionToChildren(parentId: string): void {
-    const parentItem = this.currentItems.find(item => item['id'] === parentId);
-    this.deepItems = [...this.deepItems, parentItem];
-    console.log(this.deepItems);
-    this.fileManagerService.getChildren(parentId).subscribe(children => {
+  transitionToChildren(name: string): void {
+    const path = `${this.path}/${name}`
+    this.fileManagerService.getChildrenByPath(path).subscribe(children => {
       this.currentItems = children;
+      this.router.navigate([path.split("/").slice(1).join("/")]);
+      this.path = path
     });
   }
 
-  transitionBack(parentId: string): void {
-    if (this.deepItems.length > 1) {
-      this.deepItems = [...this.deepItems.slice(0, this.deepItems.length - 1)];
-    } else {
+  transitionBack(index: number): void {
+    if (this.path.split("/").length === 1) {
       return;
     }
-    this.fileManagerService.getChildren(parentId).subscribe(children => {
+    const path = this.path.split("/").slice(0, index - 1).join("/");
+    const pathRedirect = this.path.split("/").slice(1, index - 1).join("/");
+    this.fileManagerService.getChildrenByPath(path).subscribe(children => {
       this.currentItems = children;
+      this.path = path;
+      this.router.navigate([`/${pathRedirect}`]);
+    })
+  }
+  breadcrumbClick(index: number): void {
+    if (this.path.split("/").length === 1) {
+      return;
+    }
+    const path = this.path.split("/").slice(1, index + 1).join("/")
+    const pathRequest = this.path.split("/").slice(0, index + 1).join("/");
+    this.fileManagerService.getChildrenByPath(pathRequest).subscribe(children => {
+      this.currentItems = children;
+      this.path = pathRequest;
+      this.router.navigate([`/${path}`]);
     });
   }
-  breadcrumbClick(index: number, parentId: string): void {
-    if (this.deepItems.length > 1 && this.deepItems.length !== index + 1) {
-      this.deepItems = [...this.deepItems.slice(0, index + 1)];
-    } else {
-      return;
-    }
-    this.fileManagerService.getChildren(parentId).subscribe(children => {
-      this.currentItems = children;
+
+  openContextMenu(event: any) {
+    event.preventDefault();
+    this.x = event['clientX'];
+    this.y = event['clientY'];
+    this.visibleContextMenu = 'visible';
+  }
+
+  @HostListener("window:popstate")
+  updateCurrentItems(): void {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const url = event.url.split("/").filter(item => item.length).join("/");
+        if (!url.length) {
+          this.path = "root"
+        } else {
+          this.path = `root/${url}`
+        }
+        this.fileManagerService.getChildrenByPath(this.path).subscribe(children => {
+          this.currentItems = children;
+        });
+      }
     });
+  }
+
+  clickContext($event: boolean) {
+    this.isClickContext = $event;
+  }
+
+  openCreateFolder() {
+    const createFolderModal = this.modalService.open(CreateFolderComponent, { ariaLabelledBy: 'modal-basic-title' });
+    createFolderModal.componentInstance.modal = createFolderModal;
+    createFolderModal.componentInstance.createFolderEvent.subscribe((fileSystem: FileSystem) => {
+      this.currentItems = [...this.currentItems, fileSystem];
+    })
+    this.visibleContextMenu = 'hidden';
+    this.isClickContext = false;
+    if (this.currentItems.length) {
+      createFolderModal.componentInstance.parentId = this.currentItems[0].parentId;
+    } else if (this.path === 'root') {
+      this.fileManagerService.getRoot().subscribe(fileSystem => {
+        createFolderModal.componentInstance.parentId = fileSystem.id;
+      });
+    } else {
+      const path = this.path.split("/");
+      this.fileManagerService.getChildrenByPath(path.slice(0, path.length - 1).join("/")).subscribe(items => {
+        const fileSystem = items.find(element => element.name === path[path.length - 1]);
+        createFolderModal.componentInstance.parentId = fileSystem?.id;
+      });
+    }
+  }
+
+  openUploadFile() {
+    const uploadFileModal = this.modalService.open(UploadFileComponent, { ariaLabelledBy: 'modal-basic-title' });
+    uploadFileModal.componentInstance.modal = uploadFileModal;
+    uploadFileModal.componentInstance.uploadFileEvent.subscribe((fileSystem: FileSystem) => {
+      this.currentItems = [...this.currentItems, fileSystem];
+    });
+    this.visibleContextMenu = 'hidden';
+    this.isClickContext = false;
+    if (this.currentItems.length) {
+      uploadFileModal.componentInstance.parentId = this.currentItems[0].parentId;
+    }
   }
 }

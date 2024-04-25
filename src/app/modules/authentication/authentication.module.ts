@@ -13,19 +13,22 @@ import {ModalComponent} from "@root/components/modal/modal.component";
 
 
 @NgModule({
-  declarations: [
-    InputFormComponent,
-    AuthenticationComponent,
-    ChangePasswordComponent,
-    RegistrationComponent,
-    InputModuleComponent,
-    PageRequestChangePasswordComponent,
-    ModalComponent
-  ],
-  imports: [
-    CommonModule,
-    AuthenticationRoutingModule,
-    ReactiveFormsModule
-  ]
+    declarations: [
+        InputFormComponent,
+        AuthenticationComponent,
+        ChangePasswordComponent,
+        RegistrationComponent,
+        InputModuleComponent,
+        PageRequestChangePasswordComponent,
+        ModalComponent
+    ],
+    exports: [
+        InputModuleComponent
+    ],
+    imports: [
+        CommonModule,
+        AuthenticationRoutingModule,
+        ReactiveFormsModule
+    ]
 })
 export class AuthenticationModule { }

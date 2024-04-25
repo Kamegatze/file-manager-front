@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.main {
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.wrapper {
+  width: 300px;
+  background: #ffffff;
+}
+
+.wrapper .content {
+  padding: 5px 7px;
+}

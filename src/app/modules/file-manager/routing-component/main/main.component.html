@@ -1,36 +1,42 @@
-<div class="container-grid">
-  <div class="d-flex ms-3">
-    <div class="d-flex justify-content-center align-items-center">
-      <div class="container-hover me-2"
-        (click)="transitionBack(deepItems[deepItems.length - 1]['parentId'])"
-      >
-        <img class="back" alt=""
-             [src]="arrowBack" fill width="20px" height="20px"/>
-      </div>
-    </div>
-    <nav class="breadcrumb-nav text-center" aria-label="breadcrumb">
-      <ol class="breadcrumb h-100 d-flex align-items-center justify-content-center">
-        <li (click)="breadcrumbClick(i, item['id'])"
-            *ngFor="let item of deepItems; index as i"
-            class="breadcrumb-item"
-            [ngClass]="deepItems.length - 1 === i ? '': 'active'">
-            <span class="breadcrumb-item-text">
-              {{item['name']}}
-            </span>
-        </li>
-      </ol>
-    </nav>
+<div class="container-grid h-100" (contextmenu)="openContextMenu($event)">
+  <div class="ms-3">
+    <app-breadcrumb
+      [path]="path"
+      (backClick)="transitionBack($event)"
+      (breadcrumbClick)="breadcrumbClick($event)"
+    />
   </div>
   <div class="parent">
-    <div *ngFor="let item of currentItems">
-      <div (click)="transitionToChildren(item['id'])" *ngIf="!item['isFile']">
-        <img [src]="folderUrl"/>
-        <div class="text-center">
-          {{item['name']}}
-        </div>
+    <div *ngFor="let item of currentItems;">
+      <div (click)="transitionToChildren(item.name!)" *ngIf="!item.isFile">
+        <svg width="150" height="150" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48">
+          <path fill="#FFA000" d="M40,12H22l-4-4H8c-2.2,0-4,1.8-4,4v8h40v-4C44,13.8,42.2,12,40,12z"></path>
+          <path fill="#FFCA28" d="M40,12H8c-2.2,0-4,1.8-4,4v20c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V16C44,13.8,42.2,12,40,12z"></path>
+        </svg>
+      </div>
+      <div *ngIf="item.isFile">
+        <svg width="150" height="130" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48">
+          <path fill="#90CAF9" d="M40 45L8 45 8 3 30 3 40 13z"></path><path fill="#E1F5FE" d="M38.5 14L29 14 29 4.5z"></path>
+        </svg>
+      </div>
+      <div class="text-center">
+        {{item.name}}
       </div>
     </div>
   </div>
+  <app-context-menu
+  [visible]="visibleContextMenu"
+  [x]="x"
+  [y]="y"
+  (clickContext)="clickContext($event)">
+    <div (click)="openCreateFolder()" class="button-item text-center">
+      <div>Create folder</div>
+    </div>
+    <div (click)="openUploadFile()" class="button-item text-center">
+      <div>Upload file</div>
+    </div>
+  </app-context-menu>
 </div>
+
 
 

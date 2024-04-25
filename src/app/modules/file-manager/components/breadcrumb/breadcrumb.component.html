@@ -1,0 +1,32 @@
+<div class="d-flex">
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="container-hover"
+         (click)="backClick.emit(path.split('/').length)"
+    >
+      <svg class="back" height="35" width="35"
+           xmlns="http://www.w3.org/2000/svg"
+           fill="none"
+           viewBox="0 0 24 24">
+        <path
+          stroke="#000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 12H18M6 12L11 7M6 12L11 17"/>
+      </svg>
+    </div>
+  </div>
+  <nav class="text-center">
+    <ol class="h-100 d-flex align-items-center justify-content-center">
+      <li (click)="breadcrumbClick.emit(i)"
+          *ngFor="let item of this.path.split('/'); index as i"
+          class="breadcrumb-element">
+            <div class="breadcrumb-item-text"
+                 [ngClass]="this.path.split('/').length - 1 === i ? '': 'active'">
+              {{item}}
+            </div>
+      </li>
+    </ol>
+  </nav>
+
+</div>
