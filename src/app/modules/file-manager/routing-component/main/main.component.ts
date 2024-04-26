@@ -1,9 +1,9 @@
-import { Component, HostListener, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {FileManagerService} from "@file-manager/services/file-manager.service";
 import { NavigationEnd, Router} from "@angular/router";
 import {FileSystem} from "@file-manager/models/file-system";
 import {GlobalClickService} from "@file-manager/services/global-click.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {CreateFolderComponent} from "@file-manager/components/create-folder/create-folder.component";
 import {UploadFileComponent} from "@file-manager/components/upload-file/upload-file.component";
 
@@ -15,14 +15,15 @@ import {UploadFileComponent} from "@file-manager/components/upload-file/upload-f
 })
 export class MainComponent implements OnInit{
 
-  folderUrl!: string;
-  arrowBack!: string;
   currentItems!: FileSystem[];
   path!: string;
   visibleContextMenu = 'hidden';
   x = 0;
   y = 0;
   isClickContext = false;
+  @ViewChild('contextMenu')
+  menuContext!: ElementRef;
+
   constructor(
     private fileManagerService: FileManagerService,
     private router: Router,
@@ -95,9 +96,18 @@ export class MainComponent implements OnInit{
 
   openContextMenu(event: any) {
     event.preventDefault();
-    this.x = event['clientX'];
-    this.y = event['clientY'];
-    this.visibleContextMenu = 'visible';
+    const offsetX = this.menuContext.nativeElement.firstChild.firstChild['offsetWidth'];
+    const x: number = event['clientX'];
+    const y: number = event['clientY'];
+    if (x <= window.innerWidth - offsetX) {
+      this.x = x;
+      this.y = y;
+      this.visibleContextMenu = 'visible';
+    } else {
+      this.x = x - offsetX;
+      this.y = y;
+      this.visibleContextMenu = 'visible';
+    }
   }
 
   @HostListener("window:popstate")
@@ -129,19 +139,7 @@ export class MainComponent implements OnInit{
     })
     this.visibleContextMenu = 'hidden';
     this.isClickContext = false;
-    if (this.currentItems.length) {
-      createFolderModal.componentInstance.parentId = this.currentItems[0].parentId;
-    } else if (this.path === 'root') {
-      this.fileManagerService.getRoot().subscribe(fileSystem => {
-        createFolderModal.componentInstance.parentId = fileSystem.id;
-      });
-    } else {
-      const path = this.path.split("/");
-      this.fileManagerService.getChildrenByPath(path.slice(0, path.length - 1).join("/")).subscribe(items => {
-        const fileSystem = items.find(element => element.name === path[path.length - 1]);
-        createFolderModal.componentInstance.parentId = fileSystem?.id;
-      });
-    }
+    this.setParentId(createFolderModal);
   }
 
   openUploadFile() {
@@ -152,8 +150,22 @@ export class MainComponent implements OnInit{
     });
     this.visibleContextMenu = 'hidden';
     this.isClickContext = false;
+    this.setParentId(uploadFileModal);
+  }
+
+  private setParentId(modal: NgbModalRef) {
     if (this.currentItems.length) {
-      uploadFileModal.componentInstance.parentId = this.currentItems[0].parentId;
+      modal.componentInstance.parentId = this.currentItems[0].parentId;
+    } else if (this.path === 'root') {
+      this.fileManagerService.getRoot().subscribe(fileSystem => {
+        modal.componentInstance.parentId = fileSystem.id;
+      });
+    } else {
+      const path = this.path.split("/");
+      this.fileManagerService.getChildrenByPath(path.slice(0, path.length - 1).join("/")).subscribe(items => {
+        const fileSystem = items.find(element => element.name === path[path.length - 1]);
+        modal.componentInstance.parentId = fileSystem?.id;
+      });
     }
   }
 }

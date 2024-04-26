@@ -1,0 +1,25 @@
+.item > * {
+  pointer-events: none;
+}
+
+.item {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.parent :hover {
+  background: rgba(129, 129, 129, 0.16);
+  border-radius: 20px;
+}
+
+.selected-items {
+  background: rgba(129, 129, 129, 0.16);
+  border-radius: 20px;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 205px);
+  justify-items: center;
+  align-items: center;
+}

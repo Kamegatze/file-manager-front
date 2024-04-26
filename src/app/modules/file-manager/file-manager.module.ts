@@ -12,6 +12,7 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { CreateFolderComponent } from './components/create-folder/create-folder.component';
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
+import { ViewFileSystemComponent } from './components/view-file-system/view-file-system.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
     BreadcrumbComponent,
     ContextMenuComponent,
     CreateFolderComponent,
-    UploadFileComponent
+    UploadFileComponent,
+    ViewFileSystemComponent
   ],
   imports: [
     CommonModule,
