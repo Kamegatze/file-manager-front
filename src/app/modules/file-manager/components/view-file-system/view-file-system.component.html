@@ -43,6 +43,9 @@
     [visible]="visibleContextMenu"
     [x]="x"
     [y]="y"
+    (clickContext)="clickOnContext($event)"
+    (mouseover)="onContextMenuOnContextMenuComponent(true)"
+    (mouseout)="onContextMenuOnContextMenuComponent(false)"
   >
     <div class="button-item text-center">
       <div>

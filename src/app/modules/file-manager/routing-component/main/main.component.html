@@ -11,7 +11,8 @@
     [path]="path"
     (doubleClickFileSystem)="transitionToChildren($event)"
     (overOnFileSystemEvent)="setOverOnFileSystem($event)"
-    (closeMainContextMenu)="closeMainContextMenu($event)"/>
+    (closeMainContextMenu)="closeMainContextMenu($event)"
+    (callContextMenuOnContextMenuComponent)="setContextMenuOnContextMenuComponent($event)"/>
 </div>
 
 <div #contextMenu>

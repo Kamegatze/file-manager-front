@@ -14,6 +14,7 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
   @Output() closeMainContextMenu = new EventEmitter<string>();
   @Output() doubleClickFileSystem = new EventEmitter<string>();
   @Output() overOnFileSystemEvent = new EventEmitter<boolean>();
+  @Output() callContextMenuOnContextMenuComponent = new EventEmitter<boolean>()
   @ViewChild("contextMenu") contextMenu!: ElementRef;
 
   selectedIndex = -1;
@@ -22,17 +23,21 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
   y = 0;
   clickOnFileSystem = false;
   subscriptions$: Subscription[] = [];
+  private clickContext = false;
 
   constructor(private globalClickService: GlobalClickService) {
   }
 
   ngOnInit() {
     const subscribeListener = this.globalClickService.listener$.subscribe(() => {
-      this.visibleContextMenu = 'hidden';
+      if (!this.clickContext) {
+        this.visibleContextMenu = 'hidden';
+      }
       if(this.selectedIndex >= 0 && !this.clickOnFileSystem) {
         this.selectedIndex = -1;
       }
       this.clickOnFileSystem = false;
+      this.clickContext = false;
     });
     this.subscriptions$.push(subscribeListener);
   }
@@ -83,5 +88,13 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
   * */
   overOnFileSystem(event: boolean) {
     this.overOnFileSystemEvent.emit(event);
+  }
+
+  clickOnContext(event: boolean) {
+    this.clickContext = event;
+  }
+
+  onContextMenuOnContextMenuComponent(event: boolean) {
+    this.callContextMenuOnContextMenuComponent.emit(event);
   }
 }

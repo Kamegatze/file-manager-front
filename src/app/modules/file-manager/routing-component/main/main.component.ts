@@ -30,6 +30,7 @@ export class MainComponent implements OnInit, OnDestroy {
   isClickContext = false;
   overOnFileSystem = false;
   subscriptions$: Subscription[] = [];
+  private contextMenuOnContextMenuComponent = false;
 
   constructor(
     private fileManagerService: FileManagerService,
@@ -131,7 +132,7 @@ export class MainComponent implements OnInit, OnDestroy {
   * */
   openContextMenu(event: any) {
     event.preventDefault();
-    if (this.overOnFileSystem) {
+    if (this.overOnFileSystem || this.contextMenuOnContextMenuComponent) {
       return;
     }
     const offsetX = this.menuContext.nativeElement.firstChild.firstChild['offsetWidth'];
@@ -242,5 +243,9 @@ export class MainComponent implements OnInit, OnDestroy {
       });
       this.subscriptions$.push(subscribe);
     }
+  }
+
+  setContextMenuOnContextMenuComponent(event: boolean) {
+    this.contextMenuOnContextMenuComponent = event;
   }
 }
