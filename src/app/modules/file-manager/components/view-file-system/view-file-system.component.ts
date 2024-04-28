@@ -54,6 +54,7 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
   * */
   transitionToChildren(name: string) {
     this.doubleClickFileSystem.emit(name);
+    this.overOnFileSystemEvent.emit(false);
   }
 
   /*
