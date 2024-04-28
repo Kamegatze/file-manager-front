@@ -162,7 +162,7 @@ export class MainComponent implements OnInit, OnDestroy {
   updateCurrentItems(): void {
     const subscribe = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const url = event.url.split("/").filter(item => item.length).join("/");
+        const url = decodeURI(event.url.split("/").filter(item => item.length).join("/"));
         if (!url.length) {
           this.path = "root"
         } else {
