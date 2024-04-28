@@ -1,22 +1,25 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationService} from "@authentication/services/authentication/authentication.service";
 import {ChangePassword} from "@authentication/models/change-password";
 import {ActivatedRoute, Router} from "@angular/router";
 import {response} from "express";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss'
 })
-export class ChangePasswordComponent implements OnInit{
+export class ChangePasswordComponent implements OnInit, OnDestroy {
   formChangePassword!: FormGroup;
   controlsName!: string[];
   messageError!: string;
   isViewRetryPassword!: Function;
   private token!: string;
+  subscriptions$: Subscription[] = [];
+
   constructor(
     private formBuilder: FormBuilder,
     private authentication: AuthenticationService,
@@ -41,9 +44,14 @@ export class ChangePasswordComponent implements OnInit{
         (this.formChangePassword.get('passwordRetry')?.touched &&
           this.formChangePassword.get('passwordRetry')?.invalid);
     }
-    this.route.queryParams.subscribe(params => {
+    const subscription = this.route.queryParams.subscribe(params => {
       this.token = params['token'];
-    })
+    });
+    this.subscriptions$.push(subscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(subscription => subscription.unsubscribe());
   }
 
   submit() {
@@ -51,7 +59,7 @@ export class ChangePasswordComponent implements OnInit{
       ...this.formChangePassword.value,
       recoveryCode: this.token
     };
-    this.authentication.changePassword(changePassword).subscribe({
+    const subscription = this.authentication.changePassword(changePassword).subscribe({
       complete: () => {
         this.messageError = undefined!;
         this.router.navigate(["authentication"]).then();
@@ -60,5 +68,6 @@ export class ChangePasswordComponent implements OnInit{
         this.messageError = err.error.message;
       }
     });
+    this.subscriptions$.push(subscription);
   }
 }

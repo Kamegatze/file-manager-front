@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SignUp} from "@authentication/models/sign-up";
 import {AuthenticationService} from "@authentication/services/authentication/authentication.service";
@@ -7,17 +7,19 @@ import {Router} from "@angular/router";
 import {LocalStorage} from "@utilities/local-storage/local-storage";
 import {HttpErrorResponse, HttpEvent, HttpResponse} from "@angular/common/http";
 import {ResponseEntity} from "@root/models/response-entity";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.scss'
 })
-export class RegistrationComponent implements OnInit{
+export class RegistrationComponent implements OnInit, OnDestroy {
   formRegistration!: FormGroup;
   controlsName!: string[];
   messageError!: string;
   isViewRetryPassword!: Function;
+  subscriptions$: Subscription[] = [];
   private EMAIL_PATTERN = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
   constructor(
     private formBuilder: FormBuilder,
@@ -67,24 +69,30 @@ export class RegistrationComponent implements OnInit{
     }
   }
 
+  ngOnDestroy() {
+    this.subscriptions$.forEach(subscription => subscription.unsubscribe());
+  }
+
   submit() {
     const signUp: SignUp = this.formRegistration.value;
-    this.authenticationService.signup(signUp).subscribe({
+    const subscription = this.authenticationService.signup(signUp).subscribe({
       next: response => {
         this.messageError = undefined!;
         if (response.returnCode >= 200 && response.returnCode <= 300) {
-          this.authenticationService.signin(<Login>{login: signUp.login, password: signUp.password}).subscribe({
+          const subscriptionNested = this.authenticationService.signin(<Login>{login: signUp.login, password: signUp.password}).subscribe({
             next: jwtToken => {
               this.localStorageImp.setValueLocalStorage(this.authenticationService.getKeyJwtObject(), jwtToken);
               this.router.navigate(["/"]).then();
             }
           });
+          this.subscriptions$.push(subscriptionNested);
         }
       },
       error: (err: HttpErrorResponse) => {
         this.messageError = err.error.message
       }
     });
+    this.subscriptions$.push(subscription);
   }
 
 }
