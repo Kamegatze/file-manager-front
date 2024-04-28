@@ -42,7 +42,7 @@ export class MainComponent implements OnInit, OnDestroy {
     /*
     * Получения пути из url браузера
     * */
-    const url = this.router.url.split("/").filter(item => item.length).join("/");
+    const url = decodeURI(this.router.url.split("/").filter(item => item.length).join("/"));
     if (!url.length) {
       this.path = "root"
     } else {
