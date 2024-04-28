@@ -9,7 +9,9 @@
   <app-view-file-system
     [currentItems]="currentItems"
     [path]="path"
-    (doubleClickFileSystem)="transitionToChildren($event)"/>
+    (doubleClickFileSystem)="transitionToChildren($event)"
+    (overOnFileSystemEvent)="setOverOnFileSystem($event)"
+    (closeMainContextMenu)="closeMainContextMenu($event)"/>
 </div>
 
 <div #contextMenu>

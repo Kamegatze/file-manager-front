@@ -6,11 +6,11 @@ import {Subject} from "rxjs";
 })
 export class GlobalClickService {
   private _clickEvent = new Subject<void>();
-  private _listner$ = this._clickEvent.asObservable();
+  private _listener$ = this._clickEvent.asObservable();
   constructor() { }
 
-  get listner$() {
-    return this._listner$;
+  get listener$() {
+    return this._listener$;
   }
 
   click() {

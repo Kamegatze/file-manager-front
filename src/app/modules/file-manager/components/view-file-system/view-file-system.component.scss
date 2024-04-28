@@ -23,3 +23,20 @@
   justify-items: center;
   align-items: center;
 }
+
+.button-item {
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.button-item span {
+  font-size: 19px;
+  margin-left: 8px;
+  height: 100%;
+  width: 100%;
+}
+
+.button-item :hover {
+  background: #f6f6f6;
+  border-radius: 10px;
+}

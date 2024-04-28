@@ -1,6 +1,12 @@
 <div class="parent text-center">
   <ng-container *ngFor="let item of currentItems; index as i" >
-    <div (click)="clickByFileSystem(i)" *ngIf="!item.isFile" [ngClass]="selectedIndex === i ? 'selected-items':''" class="item" (dblclick)="transitionToChildren(item.name!)">
+    <div  (mouseover)="overOnFileSystem(true)"
+          (mouseout)="overOnFileSystem(false)"
+          (contextmenu)="openContextMenuFileSystem($event)"
+          (click)="clickByFileSystem(i)"
+          *ngIf="!item.isFile"
+          [ngClass]="selectedIndex === i ? 'selected-items':''" class="item"
+          (dblclick)="transitionToChildren(item.name!)">
       <div>
         <svg width="150" height="150"
              xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48">
@@ -12,7 +18,12 @@
         </div>
       </div>
     </div>
-    <div (click)="clickByFileSystem(i)" [ngClass]="selectedIndex === i ? 'selected-items':''" *ngIf="item.isFile" class="item">
+    <div  (mouseover)="overOnFileSystem(true)"
+          (mouseout)="overOnFileSystem(false)"
+          (contextmenu)="openContextMenuFileSystem($event)"
+          (click)="clickByFileSystem(i)"
+          [ngClass]="selectedIndex === i ? 'selected-items':''"
+          *ngIf="item.isFile" class="item">
       <div>
         <svg
           width="150" height="130" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 48 48">
@@ -25,4 +36,28 @@
       </div>
     </div>
   </ng-container>
+</div>
+
+<div #contextMenu>
+  <app-context-menu
+    [visible]="visibleContextMenu"
+    [x]="x"
+    [y]="y"
+  >
+    <div class="button-item text-center">
+      <div>
+        Change name
+      </div>
+    </div>
+    <div class="button-item text-center">
+      <div>
+        Download
+      </div>
+    </div>
+    <div class="button-item text-center">
+      <div>
+        Delete
+      </div>
+    </div>
+  </app-context-menu>
 </div>
