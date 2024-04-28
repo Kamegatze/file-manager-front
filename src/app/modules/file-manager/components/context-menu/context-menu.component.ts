@@ -1,4 +1,4 @@
-import {Component, EventEmitter, input, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-context-menu',
