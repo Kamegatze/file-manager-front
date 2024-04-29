@@ -13,6 +13,8 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
 import { CreateFolderComponent } from './components/create-folder/create-folder.component';
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { ViewFileSystemComponent } from './components/view-file-system/view-file-system.component';
+import { ChangeNameFileSystemComponent } from './components/change-name-file-system/change-name-file-system.component';
+import { DeleteComponentFileSystemComponent } from './components/delete-component-file-system/delete-component-file-system.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { ViewFileSystemComponent } from './components/view-file-system/view-file
     ContextMenuComponent,
     CreateFolderComponent,
     UploadFileComponent,
-    ViewFileSystemComponent
+    ViewFileSystemComponent,
+    ChangeNameFileSystemComponent,
+    DeleteComponentFileSystemComponent
   ],
   imports: [
     CommonModule,

@@ -3,22 +3,22 @@
   <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 </div>
 <div class="modal-body">
-  <form (ngSubmit)="createFolder()" >
+  <form (ngSubmit)="changeName()" >
     <div class="mb-3">
       <p *ngIf="name.invalid && name.touched"
          class="text-danger">
         name must one sign or more
       </p>
-      <label for="name">Input name folder</label>
+      <label for="nameFileSystem">Input name folder</label>
       <div class="input-group">
-        <input id="name"
-        class="form-control"
-        placeholder="Input new name"
-        [formControl]="name">
+        <input id="nameFileSystem"
+               class="form-control"
+               placeholder="Input new name"
+               [formControl]="name">
       </div>
     </div>
     <div class="mb-3">
-      <button [disabled]="name.invalid" class="btn btn-primary">Create folder</button>
+      <button [disabled]="name.invalid" class="btn btn-primary">Change item</button>
     </div>
   </form>
 </div>

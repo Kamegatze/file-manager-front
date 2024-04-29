@@ -48,7 +48,7 @@
     (mouseout)="onContextMenuOnContextMenuComponent(false)"
   >
     <div class="button-item text-center">
-      <div>
+      <div (click)="openChangeModal()">
         Change name
       </div>
     </div>
@@ -60,7 +60,7 @@
       </div>
     </div>
     <div class="end-item button-item text-center">
-      <div>
+      <div (click)="openDeleteModal()">
         Delete
       </div>
     </div>

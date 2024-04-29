@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <h4 class="modal-title">Create folder</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body d-flex">
+  <div class="mb-3">
+    <button (click)="delete()" class="btn btn-danger">Delete</button>
+  </div>
+  <div class="flex-grow-1"></div>
+  <div>
+    <button (click)="modal.dismiss('Cross click')" class="btn btn-close">Close</button>
+  </div>
+</div>

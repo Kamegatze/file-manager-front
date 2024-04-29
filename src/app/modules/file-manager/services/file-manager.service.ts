@@ -38,7 +38,20 @@ export class FileManagerService {
     return this.http.post<FileSystem>(`${this.url}/create-file`, formData);
   }
 
-  downloadFolder(id: string) {
+  downloadFolder(id: string): Observable<Blob> {
     return this.http.get(`${this.url}/download-all-content-folder/${id}`, {responseType: 'blob'});
   }
+
+  downloadFile(id: string): Observable<Blob> {
+    return this.http.get(`${this.url}/download/${id}`, {responseType: 'blob'});
+  }
+
+  changeFileSystem(fileSystem: FileSystem): Observable<FileSystem> {
+    return this.http.post<FileSystem>(`${this.url}/rename-file-system`, fileSystem);
+  }
+
+  deleteById(id: string): Observable<any> {
+    return this.http.delete(`${this.url}/${id}`);
+  }
+
 }

@@ -4,6 +4,14 @@ import {GlobalClickService} from "@file-manager/services/global-click.service";
 import {Subscription} from "rxjs";
 import {FileManagerService} from "@file-manager/services/file-manager.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {CreateFolderComponent} from "@file-manager/components/create-folder/create-folder.component";
+import {
+  ChangeNameFileSystemComponent
+} from "@file-manager/components/change-name-file-system/change-name-file-system.component";
+import {
+  DeleteComponentFileSystemComponent
+} from "@file-manager/components/delete-component-file-system/delete-component-file-system.component";
 
 @Component({
   selector: 'app-view-file-system',
@@ -32,7 +40,8 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
   constructor(
     private globalClickService: GlobalClickService,
     private fileManagerService: FileManagerService,
-    private sanitizer: DomSanitizer) {
+    private sanitizer: DomSanitizer,
+    private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -70,7 +79,7 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
   }
 
   /*
-  * ткрытие контекстного меню на файлы или папки
+  * открытие контекстного меню на файлы или папки
   * */
   openContextMenuFileSystem(event: any, i: number) {
     event.preventDefault();
@@ -113,16 +122,48 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
       return;
     }
     if (fileSystem.isFile) {
+      const subscribe = this.fileManagerService.downloadFile(fileSystem.id!).subscribe(data => {
+        this.nameDownloadFile = fileSystem.name!;
+        this.downloadUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(data));
+      });
+      this.subscriptions$.push(subscribe);
       return;
     }
-    this.fileManagerService.downloadFolder(fileSystem.id!).subscribe(data => {
+    const subscribe = this.fileManagerService.downloadFolder(fileSystem.id!).subscribe(data => {
       this.nameDownloadFile = `${fileSystem.name}.zip`;
       this.downloadUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(data));
     });
+    this.subscriptions$.push(subscribe);
   }
 
   download() {
     this.visibleContextMenu = 'hidden';
+  }
 
+  openChangeModal() {
+    this.visibleContextMenu = 'hidden';
+    const fileSystem = this.currentItems[this.selectedIndex];
+    const changeModal = this.modalService.open(ChangeNameFileSystemComponent,
+      { ariaLabelledBy: 'modal-basic-title' });
+    changeModal.componentInstance.modal = changeModal;
+    changeModal.componentInstance.id = fileSystem.id;
+    const subscribe = changeModal.componentInstance.changeNameEvent.subscribe((fileSystem: FileSystem)  => {
+      const index = this.currentItems.findIndex(item => item.id === fileSystem.id);
+      this.currentItems[index] = fileSystem;
+    });
+    this.subscriptions$.push(subscribe);
+  }
+
+  openDeleteModal() {
+    this.visibleContextMenu = 'hidden';
+    const fileSystem = this.currentItems[this.selectedIndex];
+    const deleteModal = this.modalService.open(DeleteComponentFileSystemComponent,
+      { ariaLabelledBy: 'modal-basic-title' });
+    deleteModal.componentInstance.id = fileSystem.id;
+    deleteModal.componentInstance.modal = deleteModal;
+    deleteModal.componentInstance.deleteEvent.subscribe((id: string) => {
+      const index = this.currentItems.findIndex(item => item.id === id);
+      this.currentItems.splice(index, 1);
+    })
   }
 }
