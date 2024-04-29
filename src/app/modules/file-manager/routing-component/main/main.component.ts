@@ -52,7 +52,9 @@ export class MainComponent implements OnInit, OnDestroy {
     /*
     * Получения всех елементов по пути на каждом уровни
     * */
-    const subscribeChildrenByPath = this.fileManagerService.getChildrenByPath(this.path).subscribe(children => {
+    const path = this.path.split("/");
+    const pathRelative = `/${path.slice(1, path.length).join("/")}`;
+    const subscribeChildrenByPath = this.fileManagerService.getChildrenByPath(pathRelative).subscribe(children => {
       this.currentItems = children;
     });
     this.subscriptions$.push(subscribeChildrenByPath);
@@ -77,9 +79,10 @@ export class MainComponent implements OnInit, OnDestroy {
   * */
   transitionToChildren(name: string): void {
     const path = `${this.path}/${name}`
-    const subscribe = this.fileManagerService.getChildrenByPath(path).subscribe(children => {
+    const pathRelative = `/${path.split("/").slice(1).join("/")}`
+    const subscribe = this.fileManagerService.getChildrenByPath(pathRelative).subscribe(children => {
       this.currentItems = children;
-      this.router.navigate([path.split("/").slice(1).join("/")]);
+      this.router.navigate([pathRelative]);
       this.path = path
     });
     this.subscriptions$.push(subscribe);
@@ -94,7 +97,7 @@ export class MainComponent implements OnInit, OnDestroy {
     }
     const path = this.path.split("/").slice(0, index - 1).join("/");
     const pathRedirect = this.path.split("/").slice(1, index - 1).join("/");
-    const subscribe = this.fileManagerService.getChildrenByPath(path).subscribe(children => {
+    const subscribe = this.fileManagerService.getChildrenByPath(`/${pathRedirect}`).subscribe(children => {
       this.currentItems = children;
       this.path = path;
       this.router.navigate([`/${pathRedirect}`]);
@@ -111,7 +114,7 @@ export class MainComponent implements OnInit, OnDestroy {
     }
     const path = this.path.split("/").slice(1, index + 1).join("/")
     const pathRequest = this.path.split("/").slice(0, index + 1).join("/");
-    const subscribe = this.fileManagerService.getChildrenByPath(pathRequest).subscribe(children => {
+    const subscribe = this.fileManagerService.getChildrenByPath(`/${path}`).subscribe(children => {
       this.currentItems = children;
       this.path = pathRequest;
       this.router.navigate([`/${path}`]);
@@ -169,7 +172,8 @@ export class MainComponent implements OnInit, OnDestroy {
         } else {
           this.path = `root/${url}`
         }
-        this.fileManagerService.getChildrenByPath(this.path).subscribe(children => {
+        const path = `/${this.path.split("/").slice(1).join("/")}`;
+        this.fileManagerService.getChildrenByPath(path).subscribe(children => {
           this.currentItems = children;
         });
       }
