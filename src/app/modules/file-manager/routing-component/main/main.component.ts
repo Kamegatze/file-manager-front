@@ -241,7 +241,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.subscriptions$.push(subscribe);
     } else {
       const path = this.path.split("/");
-      const subscribe = this.fileManagerService.getChildrenByPath(path.slice(0, path.length - 1).join("/")).subscribe(items => {
+      const subscribe = this.fileManagerService.getChildrenByPath(`/${path.slice(1, path.length - 1).join("/")}`).subscribe(items => {
         const fileSystem = items.find(element => element.name === path[path.length - 1]);
         modal.componentInstance.parentId = fileSystem?.id;
       });
