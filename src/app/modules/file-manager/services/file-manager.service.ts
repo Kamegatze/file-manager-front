@@ -3,13 +3,16 @@ import {HttpClient} from "@angular/common/http";
 import {FILE_MANAGER_API} from "@root/app.constant";
 import {Observable} from "rxjs";
 import {FileSystem} from "@file-manager/models/file-system";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileManagerService {
   private url = `${FILE_MANAGER_API}/api/file-system`;
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) {}
 
   getRoot(): Observable<FileSystem> {
     return this.http.get<any>(`${this.url}/get-root`);
@@ -33,5 +36,9 @@ export class FileManagerService {
 
   uploadFile(formData: FormData): Observable<FileSystem> {
     return this.http.post<FileSystem>(`${this.url}/create-file`, formData);
+  }
+
+  downloadFolder(id: string) {
+    return this.http.get(`${this.url}/download-all-content-folder/${id}`, {responseType: 'blob'});
   }
 }

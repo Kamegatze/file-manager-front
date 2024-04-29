@@ -2,7 +2,7 @@
   <ng-container *ngFor="let item of currentItems; index as i" >
     <div  (mouseover)="overOnFileSystem(true)"
           (mouseout)="overOnFileSystem(false)"
-          (contextmenu)="openContextMenuFileSystem($event)"
+          (contextmenu)="openContextMenuFileSystem($event,i)"
           (click)="clickByFileSystem(i)"
           *ngIf="!item.isFile"
           [ngClass]="selectedIndex === i ? 'selected-items':''" class="item"
@@ -20,7 +20,7 @@
     </div>
     <div  (mouseover)="overOnFileSystem(true)"
           (mouseout)="overOnFileSystem(false)"
-          (contextmenu)="openContextMenuFileSystem($event)"
+          (contextmenu)="openContextMenuFileSystem($event, i)"
           (click)="clickByFileSystem(i)"
           [ngClass]="selectedIndex === i ? 'selected-items':''"
           *ngIf="item.isFile" class="item">
@@ -54,7 +54,9 @@
     </div>
     <div class="button-item text-center">
       <div>
-        Download
+        <a [href]="downloadUrl" [download]="nameDownloadFile" (click)="download()">
+          Download
+        </a>
       </div>
     </div>
     <div class="end-item button-item text-center">

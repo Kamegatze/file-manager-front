@@ -2,6 +2,8 @@ import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, V
 import {FileSystem} from "@file-manager/models/file-system";
 import {GlobalClickService} from "@file-manager/services/global-click.service";
 import {Subscription} from "rxjs";
+import {FileManagerService} from "@file-manager/services/file-manager.service";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-view-file-system',
@@ -23,9 +25,14 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
   y = 0;
   clickOnFileSystem = false;
   subscriptions$: Subscription[] = [];
+  downloadUrl!: SafeResourceUrl;
+  nameDownloadFile!: string;
   private clickContext = false;
 
-  constructor(private globalClickService: GlobalClickService) {
+  constructor(
+    private globalClickService: GlobalClickService,
+    private fileManagerService: FileManagerService,
+    private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -65,8 +72,9 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
   /*
   * ткрытие контекстного меню на файлы или папки
   * */
-  openContextMenuFileSystem(event: any) {
+  openContextMenuFileSystem(event: any, i: number) {
     event.preventDefault();
+    this.generateUrlObject(i);
     const x = event['layerX'];
     const y = event['layerY'];
     const offsetX = this.contextMenu.nativeElement.firstChild.firstChild['offsetWidth'];
@@ -96,5 +104,25 @@ export class ViewFileSystemComponent implements OnInit, OnDestroy {
 
   onContextMenuOnContextMenuComponent(event: boolean) {
     this.callContextMenuOnContextMenuComponent.emit(event);
+  }
+
+  generateUrlObject(i: number) {
+    this.selectedIndex = i;
+    const fileSystem = this.currentItems[this.selectedIndex];
+    if (!fileSystem)  {
+      return;
+    }
+    if (fileSystem.isFile) {
+      return;
+    }
+    this.fileManagerService.downloadFolder(fileSystem.id!).subscribe(data => {
+      this.nameDownloadFile = `${fileSystem.name}.zip`;
+      this.downloadUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(data));
+    });
+  }
+
+  download() {
+    this.visibleContextMenu = 'hidden';
+
   }
 }
