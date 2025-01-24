@@ -79,7 +79,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       next: response => {
         this.messageError = undefined!;
         if (response.returnCode >= 200 && response.returnCode <= 300) {
-          const subscriptionNested = this.authenticationService.signin(<Login>{login: signUp.login, password: signUp.password}).subscribe({
+          const subscriptionNested = this.authenticationService.signin(<Login>{login: signUp.login, credentials: signUp.password}).subscribe({
             next: jwtToken => {
               this.localStorageImp.setValueLocalStorage(this.authenticationService.getKeyJwtObject(), jwtToken);
               this.router.navigate(["/"]).then();
