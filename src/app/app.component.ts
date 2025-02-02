@@ -15,24 +15,15 @@ import {GlobalClickService} from "@file-manager/services/global-click.service";
 })
 export class AppComponent implements OnInit, OnDestroy {
   private isAuthenticationSubscription$!: Subscription;
-  constructor(private localStorage: LocalStorage,
-              private router: Router,
+  constructor(private router: Router,
               private authentication: AuthenticationService,
-              private http: HttpClient,
               private location: Location,
               private globalClickService: GlobalClickService
               ) {}
 
   ngOnInit(): void {
     const url: string = this.location.path();
-    const authentication = this.localStorage
-      .getValueLocalStorage<JwtToken>(this.authentication.getKeyJwtObject());
-    if (authentication === null && !url.includes("/authentication")) {
-      this.router.navigate(["authentication"]).then();
-      return;
-    }
-    this.isAuthenticationSubscription$ = this.http
-      .get<boolean>(`${this.authentication.getAuthenticationUrl()}/is-authentication`)
+    this.isAuthenticationSubscription$ = this.authentication.isAuthentication()
       .subscribe(isAuthentication => {
         if (!isAuthentication && !url.includes("/authentication")) {
           this.router.navigate(["authentication"]).then();

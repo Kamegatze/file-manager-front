@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {AUTHENTICATION_API} from "@root/app.constant";
+import {Injectable, OnDestroy} from '@angular/core';
+import {API} from "@root/app.constant";
 import {Login} from "@authentication/models/login";
 import {HttpClient} from "@angular/common/http";
 import {JwtToken} from "@authentication/models/jwt-token";
-import {Observable} from "rxjs";
+import {Observable, Subject, tap} from "rxjs";
 import {SignUp} from "@authentication/models/sign-up";
 import {ResponseEntity} from "@root/models/response-entity";
 import {ChangePassword} from "@authentication/models/change-password";
@@ -11,16 +11,19 @@ import {ChangePassword} from "@authentication/models/change-password";
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService {
-
-  private readonly authenticationUrl: string = `${AUTHENTICATION_API}/api/auth/service`;
+export class AuthenticationService implements OnDestroy {
+  private readonly authenticationUrl: string = `${API}/api/v1/auth/service`;
   private readonly keyJwtToken: string = "jwt-token";
+  private subject$: Subject<boolean> | null = null
+
   constructor(private http: HttpClient) { }
+
+  ngOnDestroy(): void {
+    this.subject$?.unsubscribe()
+  }
+
   public getKeyJwtObject(): string {
     return this.keyJwtToken;
-  }
-  public getAuthenticationUrl(): string {
-    return this.authenticationUrl;
   }
   public signin(login: Login): Observable<JwtToken> {
     return this.http.post<JwtToken>(`${this.authenticationUrl}/signin`, login)
@@ -38,5 +41,22 @@ export class AuthenticationService {
 
   public changePassword(changePassword: ChangePassword): Observable<ResponseEntity> {
     return this.http.post<ResponseEntity>(`${this.authenticationUrl}/change-password`, changePassword);
+  }
+
+  public isAuthentication(): Observable<boolean> {
+    let subject = this.getSubject();
+    this.http.get<any>(`${API}/api/v1/auth/is-authentication`)
+      .subscribe({
+        next: () => subject.next(true),
+        error:  () => subject.next(false)
+      });
+    return subject.asObservable();
+  }
+
+  private getSubject(): Subject<boolean> {
+    if (this.subject$ === null) {
+      return new Subject<boolean>();
+    }
+    return this.subject$;
   }
 }

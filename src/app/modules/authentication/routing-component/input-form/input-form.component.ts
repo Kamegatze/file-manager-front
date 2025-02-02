@@ -20,14 +20,13 @@ export class InputFormComponent implements OnInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder,
               private authentication: AuthenticationService,
-              private localStorage: LocalStorage,
               private router: Router
   ) {}
 
   ngOnInit(): void {
     this.formLogin = this.formBuilder.group({
       login: ["", [Validators.required]],
-      password: ["", [Validators.required]]
+      credentials: ["", [Validators.required]]
     })
     this.controlsName = Object.keys(this.formLogin.controls);
   }
@@ -41,7 +40,6 @@ export class InputFormComponent implements OnInit, OnDestroy {
     const subscription = this.authentication.signin(login).subscribe({
       next: objectToken => {
         this.messageError = undefined!;
-        this.localStorage.setValueLocalStorage(this.authentication.getKeyJwtObject(), objectToken);
         this.router.navigate(["/"]).then();
       },
       error: (err: HttpErrorResponse) => {

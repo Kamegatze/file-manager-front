@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {FILE_MANAGER_API} from "@root/app.constant";
+import {API} from "@root/app.constant";
 import {Observable} from "rxjs";
 import {FileSystem} from "@file-manager/models/file-system";
-import {DomSanitizer} from "@angular/platform-browser";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileManagerService {
-  private url = `${FILE_MANAGER_API}/api/file-system`;
+  private url = `${API}/api/v1/file-system`;
   constructor(
     private http: HttpClient
   ) {}
