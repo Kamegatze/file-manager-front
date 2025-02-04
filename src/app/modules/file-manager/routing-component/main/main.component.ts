@@ -1,6 +1,6 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FileManagerService} from "@file-manager/services/file-manager.service";
-import { NavigationEnd, Router} from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {FileSystem} from "@file-manager/models/file-system";
 import {GlobalClickService} from "@file-manager/services/global-click.service";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
@@ -24,6 +24,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   currentItems!: FileSystem[];
   path!: string;
+  pathArray: string[] = [];
   visibleContextMenu = 'hidden';
   x = 0;
   y = 0;
@@ -35,6 +36,7 @@ export class MainComponent implements OnInit, OnDestroy {
   constructor(
     private fileManagerService: FileManagerService,
     private router: Router,
+    private route: ActivatedRoute,
     private globalClickService: GlobalClickService,
     private modalService: NgbModal,
   )
@@ -43,18 +45,19 @@ export class MainComponent implements OnInit, OnDestroy {
     /*
     * Получения пути из url браузера
     * */
-    const url = decodeURI(this.router.url.split("/").filter(item => item.length).join("/"));
-    if (!url.length) {
-      this.path = "root"
+    const url = decodeURI(this.route.snapshot.queryParams["path"]);
+    if (!url.length || url === 'undefined') {
+      this.path = "/"
+      if (url === 'undefined') {
+        this.router.navigate([], {queryParams: {path: this.path}});
+      } 
     } else {
-      this.path = `root/${url}`
+      this.path = url 
     }
     /*
     * Получения всех елементов по пути на каждом уровни
     * */
-    const path = this.path.split("/");
-    const pathRelative = `/${path.slice(1, path.length).join("/")}`;
-    const subscribeChildrenByPath = this.fileManagerService.getChildrenByPath(pathRelative).subscribe(children => {
+    const subscribeChildrenByPath = this.fileManagerService.getChildrenByPath(this.path).subscribe(children => {
       this.currentItems = children;
     });
     this.subscriptions$.push(subscribeChildrenByPath);
@@ -67,6 +70,7 @@ export class MainComponent implements OnInit, OnDestroy {
       }
       this.isClickContext = false;
     });
+    this.pathArray = this.path.split("/").filter(item => item.length);
     this.subscriptions$.push(subscribeListener);
   }
 
@@ -78,12 +82,12 @@ export class MainComponent implements OnInit, OnDestroy {
   * переход в следующию папки при некоторм событии
   * */
   transitionToChildren(name: string): void {
-    const path = `${this.path}/${name}`
-    const pathRelative = `/${path.split("/").slice(1).join("/")}`
-    const subscribe = this.fileManagerService.getChildrenByPath(pathRelative).subscribe(children => {
+    const path = this.path === '/' ? `${this.path}${name}` :`${this.path}/${name}`
+    const subscribe = this.fileManagerService.getChildrenByPath(path).subscribe(children => {
       this.currentItems = children;
-      this.router.navigate([pathRelative]);
+      this.router.navigate([], {queryParams: {path}});
       this.path = path
+      this.pathArray = this.path.split("/").filter(item => item.length);
     });
     this.subscriptions$.push(subscribe);
   }
@@ -92,15 +96,16 @@ export class MainComponent implements OnInit, OnDestroy {
   * переход назад в файловой системе
   * */
   transitionBack(index: number): void {
-    if (this.path.split("/").length === 1) {
+    if (this.path === "/") {
       return;
     }
-    const path = this.path.split("/").slice(0, index - 1).join("/");
-    const pathRedirect = this.path.split("/").slice(1, index - 1).join("/");
-    const subscribe = this.fileManagerService.getChildrenByPath(`/${pathRedirect}`).subscribe(children => {
+    const pathArray = this.path.split("/").slice(0, index);
+    const path = pathArray.length > 1 ? pathArray.join("/") : "/";
+    const subscribe = this.fileManagerService.getChildrenByPath(path).subscribe(children => {
       this.currentItems = children;
       this.path = path;
-      this.router.navigate([`/${pathRedirect}`]);
+      this.pathArray = this.path.split("/").filter(item => item.length);
+      this.router.navigate([], {queryParams: {path}});
     });
     this.subscriptions$.push(subscribe);
   }
@@ -109,15 +114,19 @@ export class MainComponent implements OnInit, OnDestroy {
   * переход по breadcrumb по клику
   * */
   breadcrumbClick(index: number): void {
-    if (this.path.split("/").length === 1) {
+    if (this.path === '/') {
       return;
     }
-    const path = this.path.split("/").slice(1, index + 1).join("/")
-    const pathRequest = this.path.split("/").slice(0, index + 1).join("/");
-    const subscribe = this.fileManagerService.getChildrenByPath(`/${path}`).subscribe(children => {
+    const pathArray = this.path.split("/").slice(0, index + 1);
+    const path = pathArray.length > 1 ? pathArray.join("/") : "/";
+    if (path === this.path) {
+      return;
+    }
+    const subscribe = this.fileManagerService.getChildrenByPath(path).subscribe(children => {
       this.currentItems = children;
-      this.path = pathRequest;
-      this.router.navigate([`/${path}`]);
+      this.path = path;
+      this.pathArray = this.path.split("/").filter(item => item.length);
+      this.router.navigate([], {queryParams: {path}});
     });
     this.subscriptions$.push(subscribe);
   }
@@ -166,17 +175,17 @@ export class MainComponent implements OnInit, OnDestroy {
   updateCurrentItems(): void {
     const subscribe = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const url = decodeURI(event.url.split("/").filter(item => item.length).join("/"));
-        if (!url.length) {
-          this.path = "root"
+        const url = decodeURI(this.route.snapshot.queryParams["path"]);
+        if (!url.length || url === 'undefined') {
+          this.path = "/"
         } else {
-          this.path = `root/${url}`
+          this.path = url 
         }
-        const path = `/${this.path.split("/").slice(1).join("/")}`;
-        this.fileManagerService.getChildrenByPath(path).subscribe(children => {
+        this.fileManagerService.getChildrenByPath(this.path).subscribe(children => {
           this.currentItems = children;
         });
       }
+      this.pathArray = this.path.split("/").filter(item => item.length);
     });
     this.subscriptions$.push(subscribe);
   }
@@ -234,7 +243,7 @@ export class MainComponent implements OnInit, OnDestroy {
   private setParentId(modal: NgbModalRef) {
     if (this.currentItems.length) {
       modal.componentInstance.parentId = this.currentItems[0].parentId;
-    } else if (this.path === 'root') {
+    } else if (this.path === '/') {
       const subscribe = this.fileManagerService.getRoot().subscribe(fileSystem => {
         modal.componentInstance.parentId = fileSystem.id;
       });

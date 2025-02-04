@@ -7,6 +7,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 })
 export class BreadcrumbComponent {
   @Input() path!: string;
+  @Input() pathArray: string[] = []
   @Output() backClick = new EventEmitter<any>()
   @Output() breadcrumbClick = new EventEmitter<any>();
 }
